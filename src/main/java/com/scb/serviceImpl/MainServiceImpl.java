@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
-
 
 import com.scb.model.ProcessFlow;
 import com.scb.model.ProcessFlowSequence;
@@ -21,7 +19,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class MainServiceImpl implements MainService{
+public class MainServiceImpl implements MainService {
 	@Autowired
 	private ProcessFlowSequenceRepository processflowsequencerepository;
 	@Autowired
@@ -29,54 +27,52 @@ public class MainServiceImpl implements MainService{
 	@Autowired
 	private ServiceDetailRepository servicedetailrepository;
 
-
-
 	@Override
 	public boolean addProcessFlowSequence(ProcessFlowSequence processflowsequence) {
 		log.info("ProcessFlowSequence received: " + processflowsequence);
 		ProcessFlowSequence processFlowSequence = null;
 		try {
-		processFlowSequence = (ProcessFlowSequence) processflowsequencerepository.findById(processflowsequence.getProcessflowsequencecompositekey()).get();
-		}catch (NoSuchElementException ex) {
+			processFlowSequence = (ProcessFlowSequence) processflowsequencerepository
+					.findById(processflowsequence.getProcessflowsequencecompositekey()).get();
+		} catch (NoSuchElementException ex) {
 			log.info("Error in finding Process Flow Sequence : " + ex.getMessage());
-			//ex.printStackTrace();
+			// ex.printStackTrace();
 		}
 		if (processFlowSequence != null) {
 			return false;
 		} else {
 			log.info("ProcessFlow being saved in db");
-			long pid=processflowsequence.getProcessflowsequencecompositekey().getProcessId();
-			String s1=processflowrepository.findProcessFlowName(pid);
+			long pid = processflowsequence.getProcessflowsequencecompositekey().getProcessId();
+			String s1 = processflowrepository.findProcessFlowName(pid);
 			processflowsequence.setProcessName(s1);
-			long sid=processflowsequence.getProcessflowsequencecompositekey().getServiceId();
-			String s2=servicedetailrepository.findServiceDetailName(sid);
+			long sid = processflowsequence.getProcessflowsequencecompositekey().getServiceId();
+			String s2 = servicedetailrepository.findServiceDetailName(sid);
 			processflowsequence.setServiceName(s2);
 			processflowsequencerepository.save(processflowsequence);
 			log.info("ProcessFlow saved in db");
 			return true;
-		}	}
+		}
+	}
 
 	@Override
 	public boolean addProcessFlow(ProcessFlow processflow) {
 		log.info("ProcessFlow received: " + processflow);
 		ProcessFlow processFlow = null;
 		try {
-			 processFlow = (ProcessFlow) processflowrepository.findById(processflow.getProcessId()).get();
-		}catch (NoSuchElementException ex) {
+			processFlow = (ProcessFlow) processflowrepository.findById(processflow.getProcessId()).get();
+		} catch (NoSuchElementException ex) {
 			log.info("Error in finding Process Flow : " + ex.getMessage());
 
 		}
-		
-		
+
 		if (processFlow != null) {
 			return false;
 		} else {
 			log.info("ProcessFlow being saved in db");
-			
-			if((processflow.getStatusName()).equals("Active")) {
+
+			if ((processflow.getStatusName()).equals("Active")) {
 				processflow.setStatus(1);
-			}
-			else {
+			} else {
 				processflow.setStatus(0);
 			}
 			processflowrepository.save(processflow);
@@ -87,25 +83,24 @@ public class MainServiceImpl implements MainService{
 
 	@Override
 	public boolean addServiceDetail(ServiceDetail servicedetail) {
-	log.info("ServiceDetail received: " + servicedetail);
-		
+		log.info("ServiceDetail received: " + servicedetail);
+
 		ServiceDetail serviceDetail = null;
 		try {
 			serviceDetail = (ServiceDetail) servicedetailrepository.findById(servicedetail.getServiceId()).get();
 		} catch (NoSuchElementException ex) {
 			log.info("Error in finding service detail : " + ex.getMessage());
 		}
-		
+
 		log.info("ServiceDetail from db: " + serviceDetail);
-		
-		if (serviceDetail != null ) {
+
+		if (serviceDetail != null) {
 			return false;
 		} else {
 			log.info("ServiceDetail being saved in db");
-			if((servicedetail.getStatusName()).equals("Active")) {
+			if ((servicedetail.getStatusName()).equals("Active")) {
 				servicedetail.setStatus(1);
-			}
-			else {
+			} else {
 				servicedetail.setStatus(0);
 			}
 			servicedetailrepository.save(servicedetail);
@@ -172,7 +167,7 @@ public class MainServiceImpl implements MainService{
 		servicedetailrepository.save(servicedetail);
 		return true;
 	}
-	
+
 	@Override
 	public boolean ModifyProcessFlow(ProcessFlow processflow) {
 		processflowrepository.save(processflow);
@@ -183,7 +178,7 @@ public class MainServiceImpl implements MainService{
 	public boolean ModifyProcessFlowSequence(ProcessFlowSequence processflowsequence) {
 		processflowsequencerepository.save(processflowsequence);
 		return true;
-		
+
 	}
 
 	@Override
@@ -214,10 +209,30 @@ public class MainServiceImpl implements MainService{
 
 	@Override
 	public ProcessFlowSequence getProcessFlowSequenceByCompositeId(long processId, long serviceId) {
-		ProcessFlowSequence obj = processflowsequencerepository.getProcessFlowSequenceByCompositeId(processId, serviceId);
+		ProcessFlowSequence obj = processflowsequencerepository.getProcessFlowSequenceByCompositeId(processId,
+				serviceId);
 		return obj;
 	}
-	
 
+	@Override
+	public void deleteProcessFlowSequence(long processId, long serviceId) {
+		processflowsequencerepository.delete(getProcessFlowSequenceByCompositeId(processId, serviceId));
 
+	}
+
+	@Override
+	public int deleteProcessFlow(long processId) {
+		if (processflowrepository.deleteProcessFlow(processId) == 1) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public int deleteServiceDetail(long serviceId) {
+		if (servicedetailrepository.deleteServiceDetail(serviceId) == 1) {
+			return 1;
+		}
+		return 0;
+	}
 }

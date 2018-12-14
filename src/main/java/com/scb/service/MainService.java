@@ -39,4 +39,8 @@ public interface MainService {
 	
 	List<String> getAllServiceDetailName();
 	List<String> getAllProcessFlowName();
+	
+	void deleteProcessFlowSequence(long processId,long serviceId);
+	int deleteProcessFlow(long processId);
+	int deleteServiceDetail(long serviceId);
 }
