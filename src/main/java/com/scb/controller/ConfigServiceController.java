@@ -243,25 +243,37 @@ public class ConfigServiceController {
 	@DeleteMapping("/deleteProcessFlowSequence/{processId}/{serviceId}")
 	public ResponseEntity<Void> deleteProcessFlowSequence(@PathVariable("processId") long processId,
 			@PathVariable("serviceId") long serviceId) {
-		mainservice.deleteProcessFlowSequence(processId, serviceId);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		log.info("Request to delete deleteProcessFlowSequence with Process Id :" + processId + " and Service Id :" + serviceId);
+		if((mainservice.deleteProcessFlowSequence(processId, serviceId)) == 1) {
+			log.info("ProcessFlowSequence with Process Id :" + processId + " and Service Id :" + serviceId + " deleted successfully"); 
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		log.info("Delete request for ProcessFlowSequence ProcessId :" + processId + " and Service Id :" + serviceId + " not succeeded"); 
+		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping("/deleteProcessFlow/{processId}")
 	public ResponseEntity<Void> deleteProcessFlow(@PathVariable("processId") long processId) {
-
+		log.info("Request to delete processFlow Id :" + processId);
+		
 		if ((mainservice.deleteProcessFlow(processId)) == 1) {
+			log.info("ProcessId :" + processId + " deleted successfully"); 
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
+		log.info("Delete request for ProcessId :" + processId + " not succeeded"); 
 		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-
 	}
+
 
 	@DeleteMapping("/deleteServiceDetail/{serviceId}")
 	public ResponseEntity<Void> deleteServiceDetail(@PathVariable("serviceId") long serviceId) {
+		log.info("Request to delete deleteServiceDetail Id :" + serviceId);
+	
 		if ((mainservice.deleteServiceDetail(serviceId)) == 1) {
+			log.info("ServiceId :" + serviceId + " deleted successfully");
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
+		log.info("Delete request for ServiceId :" + serviceId + " not succeeded");
 		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 	}
 }

@@ -215,10 +215,16 @@ public class MainServiceImpl implements MainService {
 	}
 
 	@Override
-	public void deleteProcessFlowSequence(long processId, long serviceId) {
-		processflowsequencerepository.delete(getProcessFlowSequenceByCompositeId(processId, serviceId));
-
-	}
+	public int deleteProcessFlowSequence(long processId, long serviceId) {
+		int result = 1; 
+		try {
+			processflowsequencerepository.delete(getProcessFlowSequenceByCompositeId(processId, serviceId));
+		} catch (IllegalArgumentException iae) {
+			result = 0;
+			iae.printStackTrace();
+		}
+		return result;
+	} 
 
 	@Override
 	public int deleteProcessFlow(long processId) {
