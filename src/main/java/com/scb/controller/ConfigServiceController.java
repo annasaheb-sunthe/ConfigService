@@ -115,6 +115,7 @@ public class ConfigServiceController {
 		ProcessFlow process = mainservice.getProcessFlowByName(requestData.getTransactionType());
 
 		List<ProcessFlowSequence> processflowsequence = mainservice.getProcessFlowSequenceById(process.getProcessId());
+		
 		ResponseMessage responseMessage = new ResponseMessage();
 		if (processflowsequence == null || processflowsequence.isEmpty()) {
 			responseMessage.setResponseCode(400);

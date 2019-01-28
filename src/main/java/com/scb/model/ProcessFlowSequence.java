@@ -42,4 +42,9 @@ public class ProcessFlowSequence implements Serializable{
 	private long sequence;
 	@Column(name="url")
 	private String url;
+/*	
+	 @Override
+    public int compareTo(Object o) {
+         return this.getSequence().compareTo(((ProcessFlowSequence) o).getSequence());
+    }*/
 }
