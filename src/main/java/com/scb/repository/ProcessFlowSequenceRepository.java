@@ -10,7 +10,7 @@ import com.scb.model.ProcessFlowSequence;
 import com.scb.model.compositekey.ProcessFlowSequenceCompositeKey;
 @RepositoryRestResource
 public interface ProcessFlowSequenceRepository extends JpaRepository<ProcessFlowSequence, ProcessFlowSequenceCompositeKey>  {
-	@Query(value="SELECT * FROM processflowsequence sd WHERE sd.processId = ?1",nativeQuery=true)
+	@Query(value="SELECT * FROM processflowsequence sd WHERE sd.processId = ?1 ORDER BY sd.sequence ASC",nativeQuery=true)
 	List<ProcessFlowSequence> getProcessFlowSequenceById(long processId);
 	
 	
